@@ -8,34 +8,48 @@
 
 <h1>Bestellung</h1>
 
-<h2>Speisekarte</h2>
+<section id="pizza_auswahl">
 
-<img src="testpizza.jpg">
-<p>Margherita</p>
-<p>4,00€</p>
+    <h2>Speisekarte</h2>
 
-<img src="testpizza.jpg">
-<p>Salami</p>
-<p>4,50€</p>
+    <img src="testpizza.jpg" alt="">
+    <p>Margherita</p>
+    <p>4,00€</p>
 
-<img src="testpizza.jpg">
-<p>Hawaii</p>
-<p>5,50€</p>
+    <img src="testpizza.jpg" alt="">
+    <p>Salami</p>
+    <p>4,50€</p>
 
-<h2>Warenkorb</h2>
+    <img src="testpizza.jpg" alt="">
+    <p>Hawaii</p>
+    <p>5,50€</p>
 
-<textarea >
-    Salami
-    Hawaii
-    Salami
-</textarea>
+</section>
 
-<p>Gesamtpreis: 14,50€</p>
+<section id="warenkorb">
 
-<input type="text" name="adresse" value="Adresse"><br>
-<button type="submit">Alle Löschen</button>
-<button type="submit">Auswahl Löschen</button>
-<button type="submit">Bestellen</button>
+    <h2>Warenkorb</h2>
+
+    <form action="https://echo.fbi.h-da.de/" method="post" accept-charset="UTF-8" id="formular">
+
+    <select name="top3[]" size="3" tabindex="0" id="pizzen_im_warenkorb" multiple>
+        <option>Salami</option>
+        <option>Hawaii</option>
+        <option>Salami</option>
+    </select>
+
+    <label for="pizzen_im_warenkorb">Pizzen im Warenkorb</label>
+
+    <p>Gesamtpreis: 14,50€</p>
+
+    <p><input type="text" id="adresse" name="adresse" value="" placeholder="Ihre Adresse"></p>
+    <input type="button" name="delete_all" value="Alle Löschen">
+    <input type="button" name="delete_select" value="Auswahl Löschen">
+    <input type="submit" value="Bestellen" >
+
+    </form>
+
+</section>
 
 </body>
 </html>
