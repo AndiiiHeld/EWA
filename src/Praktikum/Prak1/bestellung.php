@@ -65,15 +65,22 @@
 
     <form action=$formecho method="post" accept-charset="UTF-8" id="formular">
 
-    <select name="top3[]" size="3" tabindex="0" id="pizzen_im_warenkorb" multiple>
+    <p>Ausgewählte Pizzen werden bestellt. </p>
+    <select name="korb[]" size="3" tabindex="0" id="pizzen_im_warenkorb" multiple>
         <option>$erstepizzaname</option>
         <option>$zweitepizzaname</option>
-        <option>$drittepizzaname</option>
+        <option>$erstepizzaname</option>
     </select>
 
+    <p>Ausgewählte Pizzen werden bestellt. </p>
     <label for="pizzen_im_warenkorb">Pizzen im Warenkorb</label>
 
-    <p>Gesamtpreis: 14,50€</p>
+  EOT;
+  $gesamtpreis ="14,50€";
+  echo <<<EOT
+
+
+    <p>Gesamtpreis: $gesamtpreis</p>
 
     <p><input type="text" id="adresse" name="adresse" value="" placeholder="Ihre Adresse"></p>
     <input type="button" name="delete_all" value="Alle Löschen">
