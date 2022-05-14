@@ -53,15 +53,15 @@
 
     <h2>$h2zwei</h2>
     <p>
-        <input type="radio" id="bestellt" name="pizza2" value="">
+        <input type="radio" id="bestellt2" name="pizza2" value="">
         <label for="bestellt">$b</label>
     </p>
     <p>
-        <input type="radio" id="imofen" name="pizza2" value="">
+        <input type="radio" id="imofen2" name="pizza2" value="">
         <label for="imofen">$o</label>
     </p>
     <p>
-        <input type="radio" id="fertig" name="pizza2" value="">
+        <input type="radio" id="fertig2" name="pizza2" value="">
         <label for="fertig">$f</label>
     </p>
 
