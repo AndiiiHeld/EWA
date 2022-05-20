@@ -90,7 +90,7 @@ class PageTemplate extends Page
         $this->generatePageHeader($title); //to do: set optional parameters
         // to do: output view of this page
 
-        echo <<<EOT
+
 
           <h1>$h1</h1>
 
@@ -130,7 +130,7 @@ class PageTemplate extends Page
 
           </section>
 
-        EOT;
+
 
         $this->generatePageFooter();
     }
