@@ -8,14 +8,14 @@
  *
  * PHP Version 7.4
  *
- * @file     baecker.php
- * @package  baecker
+ * @file     PageTemplate.php
+ * @package  Page Templates
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  * @version  3.1
  */
 
-// to do: change name 'baecker' throughout this file
+// to do: change name 'PageTemplate' throughout this file
 require_once './Page.php';
 
 /**
@@ -33,14 +33,8 @@ class PageTemplate extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
-    $title = "Backstatus";
-    $h1 = "Bäcker";
-    $h2one = "Pizza 1";
-    $h2two = "Pizza 2";
 
-    $b = "Bestellt";
-    $o = "Im Ofen";
-    $f = "Fertig";
+
 
     /**
      * Instantiates members (to be defined above).
@@ -72,6 +66,7 @@ class PageTemplate extends Page
      */
     protected function getViewData():array
     {
+
         // to do: fetch data for this view from the database
 		// to do: return array containing data
     }
@@ -86,11 +81,20 @@ class PageTemplate extends Page
      */
     protected function generateView():void
     {
-		$data = $this->getViewData();
-        $this->generatePageHeader($title); //to do: set optional parameters
+        $title ="Backstatus";
+		//$data = $this->getViewData();
+        $this->generatePageHeader($title,"",false); //to do: set optional parameters
         // to do: output view of this page
 
+        $h1 = "Bäcker";
+        $h2one = "Pizza 1";
+        $h2two = "Pizza 2";
 
+        $b = "Bestellt";
+        $o = "Im Ofen";
+        $f = "Fertig";
+
+        echo <<<EOT
 
           <h1>$h1</h1>
 
@@ -98,7 +102,7 @@ class PageTemplate extends Page
 
             <h2>$h2one</h2>
            <p>
-               <input type="radio" id="ordered" name="pizza1" value="">
+               <input type="radio" id="orderd" name="pizza1" value="">
                <label for="ordered">$b</label>
            </p>
             <p>
@@ -130,8 +134,7 @@ class PageTemplate extends Page
 
           </section>
 
-
-
+        EOT;
         $this->generatePageFooter();
     }
 
@@ -165,7 +168,7 @@ class PageTemplate extends Page
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
-
+            //header("Content-type: text/plain; charset=UTF-8");
             header("Content-type: text/html; charset=UTF-8");
             echo $e->getMessage();
         }

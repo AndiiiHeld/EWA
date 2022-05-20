@@ -56,7 +56,7 @@ abstract class Page
         }
         /********************************************/
 
-        $this->_database = new MySQLi($host, "public", "public", "YOUR_DATABASE");
+        $this->_database = new MySQLi($host, "public", "public", "pizzaservice");
 
         if (mysqli_connect_errno()) {
             throw new Exception("Connect failed: " . mysqli_connect_error());
@@ -91,8 +91,13 @@ abstract class Page
     {
         $title = htmlspecialchars($title);
         header("Content-type: text/html; charset=UTF-8");
-
-
+        echo <<<EOT
+        <head>
+            <meta charset="UTF-8"/>
+            <title>$title</title>
+        </head>
+        <body>
+        EOT;
         // to do: handle all parameters
         // to do: output common beginning of HTML code
     }
@@ -103,6 +108,9 @@ abstract class Page
      */
     protected function generatePageFooter():void
     {
+    echo <<<EOT
+    </body>
+    EOT;
         // to do: output common end of HTML code
     }
 
