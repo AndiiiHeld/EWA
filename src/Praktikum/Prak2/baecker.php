@@ -66,6 +66,23 @@ class PageTemplate extends Page
      */
     protected function getViewData():array
     {
+        $SQLabfrage ="Select * from ordered_article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+        $emptyarray = [];
+        $status = [];
+        if (!$Recordset)
+            throw new Exception("Query failed: ".$_database->error);
+
+        while ($record = $Recordset->fetch_assoc())
+            $status = $record['status'];
+
+        $Recordset->free();
+
+        echo <<<EOT
+            $status
+        EOT;
+
+        return $emptyarray;
 
         // to do: fetch data for this view from the database
 		// to do: return array containing data
@@ -82,8 +99,9 @@ class PageTemplate extends Page
     protected function generateView():void
     {
         $title ="Backstatus";
-		//$data = $this->getViewData();
+
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
+        $data = $this->getViewData(); // WICHTIG Zeilen tauschen mit generatePageHeader!!!!!!!!!!!!!111!!!1!!1!11111
         // to do: output view of this page
 
         $h1 = "Bäcker";

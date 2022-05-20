@@ -64,6 +64,7 @@ class PageTemplate extends Page
      */
     protected function getViewData():array
     {
+        $query = mysql_query("select * from ordered_article", $_database);
         // to do: fetch data for this view from the database
 		// to do: return array containing data
     }
