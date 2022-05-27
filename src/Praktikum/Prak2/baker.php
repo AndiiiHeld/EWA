@@ -66,19 +66,59 @@ class Baker extends Page
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from ordered_article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-        $emptyarray = [];
+        $array = [];
         $status = [];
+        $orderid = [];
+        $artid = [];
+
+        $pizza = [];
+
+
+
+        $SQLabfrage ="Select * from article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
         if (!$Recordset)
             throw new Exception("Query failed: ".$_database->error);
 
-        while ($record = $Recordset->fetch_assoc())
-            $status = $record['status'];
+        while($record = $Recordset->fetch_assoc()){
+            $pizza += array($record['article_id'] => $record['name']);
+        }
+
+
+         $Recordset->free();
+
+        $SQLabfrage ="Select * from ordered_article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
+        if (!$Recordset)
+            throw new Exception("Query failed: ".$_database->error);
+
+        $i = 0;
+        while ($record = $Recordset->fetch_assoc()){
+            $status[$i] = $record['status'];
+            $orderid[$i] = $record['ordered_article_id'];
+            $artid[$i] = $record['article_id'];
+
+            $array[$i] = array($orderid[$i], $pizza[$artid[$i]] , $status[$i]);
+
+            $i++;
+        }
+
+        $i = 0;
+        while ($i < sizeof($array)){
+        //echo "<p>" .$array[$i][0] ." und " . $array[$i][1] . " und " . $array[$i][2]. "</p>";
+        $i++;
+        }
 
         $Recordset->free();
 
-        return $emptyarray;
+        $SQLabfrage ="Select * from ordered_article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
+
+
+        return $array;
 
         // to do: fetch data for this view from the database
 		// to do: return array containing data
@@ -100,55 +140,74 @@ class Baker extends Page
 
         // to do: output view of this page
 
-        $h1 = "Bäcker";
-        $h2one = "Pizza 1";
-        $h2two = "Pizza 2";
+        $h1 = "Bäckerseite";
 
-        $b = "Bestellt";
-        $o = "Im Ofen";
-        $f = "Fertig";
+        $btxt = "Bestellt";
+        $otxt = "Im Ofen";
+        $ftxt = "Fertig";
 
-        echo <<<EOT
+        $b = "ordered";
+        $o = "in_oven";
+        $f = "done";
 
-          <h1>$h1</h1>
 
-          <section id="pizza1">
+        echo "<h1>$h1</h1>";
 
-            <h2>$h2one</h2>
-           <p>
-               <input type="radio" id="orderd" name="pizza1" value="">
-               <label for="ordered">$b</label>
-           </p>
-            <p>
-               <input type="radio" id="in_oven" name="pizza1" value="">
-               <label for="in_oven">$o</label>
-            </p>
-            <p>
-                <input type="radio" id="done" name="pizza1" value="">
-                <label for="done">$f</label>
-            </p>
+        $i = 0;
+        while ($i < sizeof($data)){
+            $orderid = $data[$i][0];
+            $pizzaname = $data[$i][1];
 
-          </section>
+            $bid = $b . $orderid;
+            $oid = $o . $orderid;
+            $fid = $f . $orderid;
 
-          <section id="pizza2">
+            if($data[$i][2] == '1'){
+                $r1 = "checked";
+            }else{
+                $r1 = "";
+            }
 
-            <h2>$h2two</h2>
-            <p>
-                <input type="radio" id="ordered2" name="pizza2" value="">
-                <label for="ordered2">$b</label>
-            </p>
-            <p>
-                <input type="radio" id="in_oven2" name="pizza2" value="">
-                <label for="in_oven2">$o</label>
-            </p>
-            <p>
-                <input type="radio" id="done2" name="pizza2" value="">
-                <label for="done2">$f</label>
-            </p>
+            if($data[$i][2] == '2'){
+                $r2 = "checked";
+            }else{
+                $r2 = "";
+            }
 
-          </section>
+            if($data[$i][2] == '3'){
+                $r3 = "checked";
+            }else{
+                $r3 = "";
+            }
 
-        EOT;
+
+
+            $pizzaid = "pizza".$orderid;
+
+             echo <<<EOT
+
+                 <section id=$pizzaid >
+
+                 <h2>Bestellung $orderid Pizza $pizzaname</h2>
+                 <p>
+                     <input type="radio" id=$bid name=$pizzaid value="1" $r1>
+                           <label for=$bid>$btxt</label>
+                     </p>
+                     <p>
+                        <input type="radio" id=$oid name=$pizzaid value="2" $r2>
+                        <label for=$oid>$otxt</label>
+                     </p>
+                     <p>
+                        <input type="radio" id=$fid name=$pizzaid value="3" $r3>
+                        <label for=$fid>$ftxt</label>
+                     </p>
+
+                 </section>
+
+            EOT;
+
+            $i++;
+        }
         $this->generatePageFooter();
     }
 
