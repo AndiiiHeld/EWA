@@ -140,7 +140,7 @@ class Order extends Page
             echo <<<EOT
                 <img src=$pizzapicture alt="">
                 <p>$pizzaname</p>
-                <p>$pizzaprice</p>
+                <p>$pizzaprice €</p>
             EOT;
             $i++;
 
