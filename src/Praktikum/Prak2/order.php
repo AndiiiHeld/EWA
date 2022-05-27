@@ -66,19 +66,22 @@ class Order extends Page
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from ordered_article";
+        $SQLabfrage ="Select * from article";
         $Recordset = $this->_database->query ($SQLabfrage);
-        $emptyarray = [];
+        $array = [];
         $status = [];
         if (!$Recordset)
             throw new Exception("Query failed: ".$_database->error);
 
-        while ($record = $Recordset->fetch_assoc())
-            $status = $record['status'];
+        $i = 0;
+        while ($record = $Recordset->fetch_assoc()){
+            $array[$i] = array($record['article_id'], $record['name'], $record['picture'], $record['price']);
+            $i++;
+        }
 
         $Recordset->free();
 
-        return $emptyarray;
+        return $array;
 
         // to do: fetch data for this view from the database
 		// to do: return array containing data
@@ -125,20 +128,25 @@ class Order extends Page
             <section id="pizza_choice">
 
             <h2>$h2one</h2>
+        EOT;
 
-            <img src=$pizza_img alt="">
-            <p>$first_pizza_name</p>
-            <p>$first_pizza_price</p>
+        $i = 0;
+        while($i < sizeof($data)){
 
-            <img src=$pizza_img alt="">
-            <p>$second_pizza_name</p>
-            <p>$second_pizza_price</p>
+            $pizzaname= $data[$i][1];
+            $pizzapicture = $data[$i][2];
+            $pizzaprice = $data[$i][3];
 
-            <img src=$pizza_img alt="">
-            <p>$third_pizza_name</p>
-            <p>$third_pizza_price</p>
+            echo <<<EOT
+                <img src=$pizzapicture alt="">
+                <p>$pizzaname</p>
+                <p>$pizzaprice</p>
+            EOT;
+            $i++;
 
-          </section>
+        }
+
+        echo <<<EOT
 
           <section id="shopping_cart">
 
