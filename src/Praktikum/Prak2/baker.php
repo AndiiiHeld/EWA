@@ -29,7 +29,7 @@ require_once './Page.php';
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  */
-class PageTemplate extends Page
+class Baker extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -78,10 +78,6 @@ class PageTemplate extends Page
 
         $Recordset->free();
 
-        echo <<<EOT
-            $status
-        EOT;
-
         return $emptyarray;
 
         // to do: fetch data for this view from the database
@@ -99,9 +95,9 @@ class PageTemplate extends Page
     protected function generateView():void
     {
         $title ="Backstatus";
-
+        $data = $this->getViewData();
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
-        $data = $this->getViewData(); // WICHTIG Zeilen tauschen mit generatePageHeader!!!!!!!!!!!!!111!!!1!!1!11111
+
         // to do: output view of this page
 
         $h1 = "Bäcker";
@@ -182,7 +178,7 @@ class PageTemplate extends Page
     public static function main():void
     {
         try {
-            $page = new PageTemplate();
+            $page = new Baker();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -195,7 +191,7 @@ class PageTemplate extends Page
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-PageTemplate::main();
+Baker::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
