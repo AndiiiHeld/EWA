@@ -8,7 +8,7 @@
  *
  * PHP Version 7.4
  *
- * @file     order.php
+ * @file     driver.php
  * @package  Page Templates
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
@@ -29,7 +29,7 @@ require_once './Page.php';
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  */
-class Order extends Page
+class Driver extends Page
 {
     // to do: declare reference variables for members
     // representing substructures/blocks
@@ -94,79 +94,54 @@ class Order extends Page
      */
     protected function generateView():void
     {
-        $title ="Bestellung";
+        $title ="Fahrer";
         $data = $this->getViewData();
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
 
         // to do: output view of this page
 
-        $h1 = "Bestellung";
-        $h2one = "Speisekarte";
-        $h2two = "Warenkorb";
+      $h1 = "Fahrer";
+      $h2one = "Pizza 1";
 
-        $pizza_img = "testpizza.jpg";
+      $address1 = "Max Mustermann, Musterstrasse 1, 12345 Musterstadt";
 
-        $first_pizza_name = "Margherita";
-        $first_pizza_price = "4,00€";
+      $b = "Bestellt";
+      $o = "Im Ofen";
+      $f = "Fertig";
+      $u = "Unterwegs";
+      $g = "Geliefert";
 
-        $second_pizza_name = "Salami";
-        $second_pizza_price = "4,50€";
+      echo <<<EOT
 
-        $third_pizza_name = "Hawaii";
-        $third_pizza_price = "5,50€";
-
-        $formecho = "https://echo.fbi.h-da.de/";
-
-        $price_sum ="14,50€";
-
-        echo <<<EOT
             <h1>$h1</h1>
 
-            <section id="pizza_choice">
+                 <section id="pizza1">
 
-            <h2>$h2one</h2>
+          <h2>$h2one</h2>
 
-            <img src=$pizza_img alt="">
-            <p>$first_pizza_name</p>
-            <p>$first_pizza_price</p>
+          <p>$address1</p>
+          <p>
+              <input type="radio" id="ordered" name="pizza1" value="">
+              <label for="ordered">$b</label>
+          </p>
+          <p>
+              <input type="radio" id="in_oven" name="pizza1" value="">
+              <label for="in_oven">$o</label>
+          </p>
+          <p>
+              <input type="radio" id="done" name="pizza1" value="">
+              <label for="done">$f</label>
+          </p>
+          <p>
+              <input type="radio" id="on_the_way" name="pizza1" value="">
+              <label for="on_the_way">$u</label>
+          </p>
+          <p>
+              <input type="radio" id="delivered" name="pizza1" value="">
+              <label for="delivered">$g</label>
+          </p>
 
-            <img src=$pizza_img alt="">
-            <p>$second_pizza_name</p>
-            <p>$second_pizza_price</p>
-
-            <img src=$pizza_img alt="">
-            <p>$third_pizza_name</p>
-            <p>$third_pizza_price</p>
-
-          </section>
-
-          <section id="shopping_cart">
-
-            <h2>$h2two</h2>
-
-            <form action=$formecho method="post" accept-charset="UTF-8" id="formular">
-
-            <p>Ausgewählte Pizzen werden bestellt. </p>
-            <select name="shopping_cart[]" size="3" tabindex="0" id="pizza_shopping_cart" multiple>
-                <option>$first_pizza_name</option>
-                <option>$second_pizza_name</option>
-                <option>$third_pizza_name</option>
-            </select>
-
-            <p>Ausgewählte Pizzen werden bestellt. </p>
-            <label for="pizza_shopping_cart">Pizzen im Warenkorb</label>
-
-
-            <p>Gesamtpreis: $price_sum</p>
-
-            <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse"></p>
-            <input type="button" name="delete_all" value="Alle Löschen">
-            <input type="button" name="delete_select" value="Auswahl Löschen">
-            <input type="submit" value="Bestellen" >
-
-            </form>
-
-          </section>
+                 </section>
 
           EOT;
         $this->generatePageFooter();
@@ -198,7 +173,7 @@ class Order extends Page
     public static function main():void
     {
         try {
-            $page = new Order();
+            $page = new Driver();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -211,7 +186,7 @@ class Order extends Page
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-Order::main();
+Driver::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
