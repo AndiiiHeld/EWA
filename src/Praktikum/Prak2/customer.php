@@ -66,22 +66,42 @@ class Customer extends Page
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from ordered_article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-        $emptyarray = [];
-        $status = [];
-        if (!$Recordset)
-            throw new Exception("Query failed: ".$_database->error);
+        $array = [];
+                $status = [];
+                $orderid = [];
+                $artid = [];
+                $pizza = [];
 
-        while ($record = $Recordset->fetch_assoc())
-            $status = $record['status'];
+                $SQLabfrage ="Select * from article";
+                $Recordset = $this->_database->query ($SQLabfrage);
 
-        $Recordset->free();
+                if (!$Recordset)
+                    throw new Exception("Query failed: ".$_database->error);
 
-        return $emptyarray;
+                while($record = $Recordset->fetch_assoc()){
+                    $pizza += array($record['article_id'] => $record['name']);
+                }
 
-        // to do: fetch data for this view from the database
-		// to do: return array containing data
+                $Recordset->free();
+
+                $SQLabfrage ="Select * from ordered_article";
+                $Recordset = $this->_database->query ($SQLabfrage);
+
+                if (!$Recordset)
+                    throw new Exception("Query failed: ".$_database->error);
+
+                $i = 0;
+                while ($record = $Recordset->fetch_assoc()){
+                    $status[$i] = $record['status'];
+                    $orderid[$i] = $record['ordered_article_id'];
+                    $artid[$i] = $record['article_id'];
+
+                    $array[$i] = array($orderid[$i], $pizza[$artid[$i]] , $status[$i]);
+
+                    $i++;
+                }
+
+                return $array;
     }
 
     /**
@@ -94,79 +114,102 @@ class Customer extends Page
      */
     protected function generateView():void
     {
-        $title ="Fahrer";
+        $title ="Kunde";
         $data = $this->getViewData();
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
 
         // to do: output view of this page
 
         $h1 = "Kunde";
-        $h2one = "Pizza 1";
-        $h2two = "Pizza 2";
 
-        $b = "Bestellt";
-        $o = "Im Ofen";
-        $f = "Fertig";
-        $u = "Unterwegs";
-        $g = "Geliefert";
+          $btxt = "Bestellt";
+          $otxt = "Im Ofen";
+          $ftxt = "Fertig";
+          $utxt = "Unterwegs";
+          $gtxt = "Geliefert";
+
+          $b = "ordered";
+          $o = "in_oven";
+          $f = "done";
+          $u = "on_the_way";
+          $g = "delivered";
+
+        echo "<h1>$h1</h1>";
+        $i = 0;
+                while ($i < sizeof($data)){
+                    $orderid = $data[$i][0];
+                    $pizzaname = $data[$i][1];
+
+                    $bid = $b . $orderid;
+                    $oid = $o . $orderid;
+                    $fid = $f . $orderid;
+                    $uid = $u . $orderid;
+                    $gid = $g . $orderid;
+
+                    if($data[$i][2] == '1'){
+                        $r1 = "checked";
+                    }else{
+                        $r1 = "";
+                    }
+
+                    if($data[$i][2] == '2'){
+                        $r2 = "checked";
+                    }else{
+                        $r2 = "";
+                    }
+
+                    if($data[$i][2] == '3'){
+                        $r3 = "checked";
+                    }else{
+                        $r3 = "";
+                    }
+
+                    if($data[$i][2] == '4'){
+                        $r4 = "checked";
+                    }else{
+                        $r4 = "";
+                    }
+
+                    if($data[$i][2] == '5'){
+                        $r5 = "checked";
+                    }else{
+                        $r5 = "";
+                    }
+
+                    $pizzaid = "pizza".$orderid;
 
         echo <<<EOT
 
-            <h1>$h1</h1>
+                <section id="$pizzaid">
+                        <h2>Pizza $pizzaname</h2>
 
-            <section id="pizza1">
+                      <p>
+                          <input type="radio" id=$bid name=$pizzaid value="1" $r1>
+                          <label for=$bid>$btxt</label>
+                      </p>
+                      <p>
+                          <input type="radio" id=$oid name=$pizzaid value="2" $r2>
+                          <label for=$oid>$otxt</label>
+                      </p>
+                      <p>
+                          <input type="radio" id=$fid name=$pizzaid value="3" $r3>
+                          <label for=$fid>$ftxt</label>
+                      </p>
+                      <p>
+                          <input type="radio" id=$uid name=$pizzaid value="4" $r4>
+                          <label for=$uid>$utxt</label>
+                      </p>
+                      <p>
+                          <input type="radio" id=$gid name=$pizzaid value="5" $r5>
+                          <label for=$gid>$gtxt</label>
+                      </p>
+                             </section>
 
-                <h2>$h2one</h2>
-                 <p>
-                     <input type="radio" id="ordered" name="pizza1" value="">
-                     <label for="ordered">$b</label>
-                 </p>
-                 <p>
-                     <input type="radio" id="in_oven" name="pizza1" value="">
-                     <label for="in_oven">$o</label>
-                 </p>
-                 <p>
-                     <input type="radio" id="done" name="pizza1" value="">
-                     <label for="done">$f</label>
-                 </p>
-                 <p>
-                     <input type="radio" id="on_the_way" name="pizza1" value="">
-                     <label for="on_the_way">$u</label>
-                 </p>
-                 <p>
-                     <input type="radio" id="delivered" name="pizza1" value="">
-                     <label for="delivered">$g</label>
-                 </p>
 
-              </section>
-
-            <section id="pizza2">
-
-             <h2>$h2two</h2>
-             <p>
-                 <input type="radio" id="ordered2" name="pizza2" value="">
-                 <label for="ordered2">$b</label>
-             </p>
-             <p>
-                 <input type="radio" id="in_oven2" name="pizza2" value="">
-                 <label for="in_oven2">$o</label>
-             </p>
-             <p>
-                 <input type="radio" id="done2" name="pizza2" value="">
-                 <label for="done2">$f</label>
-             </p>
-             <p>
-                 <input type="radio" id="on_the_way2" name="pizza2" value="">
-                 <label for="on_the_way2">$u</label>
-             </p>
-             <p>
-                 <input type="radio" id="delivered2" name="pizza2" value="">
-                 <label for="delivered2">$g</label>
-             </p>
-
-            </section>
 
           EOT;
+          $i++;
+          }
         $this->generatePageFooter();
     }
 
