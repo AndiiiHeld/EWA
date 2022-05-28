@@ -8,7 +8,7 @@
  *
  * PHP Version 7.4
  *
- * @file     PageTemplate.php
+ * @file     baker.php
  * @package  Page Templates
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>

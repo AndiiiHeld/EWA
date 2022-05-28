@@ -66,22 +66,60 @@ class Driver extends Page
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from ordered_article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-        $emptyarray = [];
+        $array = [];
         $status = [];
+        $orderid = [];
+        $artid = [];
+        $ordering_id = [];
+        $address = [];
+        $pizza = [];
+
+        $SQLabfrage ="Select * from article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
         if (!$Recordset)
             throw new Exception("Query failed: ".$_database->error);
 
-        while ($record = $Recordset->fetch_assoc())
-            $status = $record['status'];
+        while($record = $Recordset->fetch_assoc()){
+            $pizza += array($record['article_id'] => $record['name']);
+        }
 
         $Recordset->free();
 
-        return $emptyarray;
 
-        // to do: fetch data for this view from the database
-		// to do: return array containing data
+        $SQLabfrage ="Select * from ordering";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
+        if (!$Recordset)
+            throw new Exception("Query failed: ".$_database->error);
+
+        while($record = $Recordset->fetch_assoc()){
+            $address += array($record['ordering_id'] => $record['address']);
+        }
+
+        $Recordset->free();
+
+        $SQLabfrage ="Select * from ordered_article";
+        $Recordset = $this->_database->query ($SQLabfrage);
+
+        if (!$Recordset)
+            throw new Exception("Query failed: ".$_database->error);
+
+        $i = 0;
+        while ($record = $Recordset->fetch_assoc()){
+            $status[$i] = $record['status'];
+            $orderid[$i] = $record['ordered_article_id'];
+            $ordering_id[$i] = $record['ordering_id'];
+            $artid[$i] = $record['article_id'];
+
+
+            $array[$i] = array($orderid[$i], $address[$ordering_id[$i]], $pizza[$artid[$i]] , $status[$i]);
+
+            $i++;
+        }
+
+        return $array;
+
     }
 
     /**
@@ -101,51 +139,98 @@ class Driver extends Page
         // to do: output view of this page
 
       $h1 = "Fahrer";
-      $h2one = "Pizza 1";
+      $btxt = "Bestellt";
+      $otxt = "Im Ofen";
+      $ftxt = "Fertig";
+      $utxt = "Unterwegs";
+      $gtxt = "Geliefert";
 
-      $address1 = "Max Mustermann, Musterstrasse 1, 12345 Musterstadt";
+      $b = "ordered";
+      $o = "in_oven";
+      $f = "done";
+      $u = "on_the_way";
+      $g = "delivered";
 
-      $b = "Bestellt";
-      $o = "Im Ofen";
-      $f = "Fertig";
-      $u = "Unterwegs";
-      $g = "Geliefert";
+    echo "<h1>$h1</h1>";
 
-      echo <<<EOT
+    $i = 0;
+        while ($i < sizeof($data)){
+            $orderid = $data[$i][0];
+            $address = $data[$i][1];
+            $pizzaname = $data[$i][2];
 
-            <h1>$h1</h1>
+            $bid = $b . $orderid;
+            $oid = $o . $orderid;
+            $fid = $f . $orderid;
+            $uid = $u . $orderid;
+            $gid = $g . $orderid;
 
-                 <section id="pizza1">
+            if($data[$i][3] == '1'){
+                $r1 = "checked";
+            }else{
+                $r1 = "";
+            }
 
-          <h2>$h2one</h2>
+            if($data[$i][3] == '2'){
+                $r2 = "checked";
+            }else{
+                $r2 = "";
+            }
 
-          <p>$address1</p>
-          <p>
-              <input type="radio" id="ordered" name="pizza1" value="">
-              <label for="ordered">$b</label>
-          </p>
-          <p>
-              <input type="radio" id="in_oven" name="pizza1" value="">
-              <label for="in_oven">$o</label>
-          </p>
-          <p>
-              <input type="radio" id="done" name="pizza1" value="">
-              <label for="done">$f</label>
-          </p>
-          <p>
-              <input type="radio" id="on_the_way" name="pizza1" value="">
-              <label for="on_the_way">$u</label>
-          </p>
-          <p>
-              <input type="radio" id="delivered" name="pizza1" value="">
-              <label for="delivered">$g</label>
-          </p>
+            if($data[$i][3] == '3'){
+                $r3 = "checked";
+            }else{
+                $r3 = "";
+            }
 
-                 </section>
+            if($data[$i][3] == '4'){
+                $r4 = "checked";
+            }else{
+                $r4 = "";
+            }
 
-          EOT;
-        $this->generatePageFooter();
+            if($data[$i][3] == '5'){
+                $r5 = "checked";
+            }else{
+                $r5 = "";
+            }
+
+            $pizzaid = "pizza".$orderid;
+
+            echo <<<EOT
+
+
+                            <section id="$pizzaid">
+                            <h2>Pizza $pizzaname</h2>
+                            <p>$address</p>
+                          <p>
+                              <input type="radio" id=$bid name=$pizzaid value="1" $r1>
+                              <label for=$bid>$btxt</label>
+                          </p>
+                          <p>
+                              <input type="radio" id=$oid name=$pizzaid value="2" $r2>
+                              <label for=$oid>$otxt</label>
+                          </p>
+                          <p>
+                              <input type="radio" id=$fid name=$pizzaid value="3" $r3>
+                              <label for=$fid>$ftxt</label>
+                          </p>
+                          <p>
+                              <input type="radio" id=$uid name=$pizzaid value="4" $r4>
+                              <label for=$uid>$utxt</label>
+                          </p>
+                          <p>
+                              <input type="radio" id=$gid name=$pizzaid value="5" $r5>
+                              <label for=$gid>$gtxt</label>
+                          </p>
+                                 </section>
+
+                          EOT;
+                          $i++;
+
     }
+    $this->generatePageFooter();
+}
 
     /**
      * Processes the data that comes via GET or POST.
