@@ -134,6 +134,10 @@ class Driver extends Page
     {
         $title ="Fahrer";
         $data = $this->getViewData();
+
+        $url = $_SERVER['PHP_SELF'];
+        header("Refresh: 10; URL=$url");
+
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
 
         // to do: output view of this page
