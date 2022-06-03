@@ -97,6 +97,10 @@ abstract class Page
             <title>$title</title>
         </head>
         <body>
+        <article id=menu>
+        <p><a href="order.php">Bestellseite</a> <a href="Baker.php">Bäcker</a> <a href="driver.php">PHP</a> <a href="customer.php">Kunde</a></p>
+        </article>
+
         EOT;
         // to do: handle all parameters
         // to do: output common beginning of HTML code
