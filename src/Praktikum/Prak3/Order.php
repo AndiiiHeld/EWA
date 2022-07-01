@@ -169,7 +169,7 @@ class Order extends Page
 
             <p>Gesamtpreis: $price_sum</p>
 
-            <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse"></p>
+            <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse" required></p>
             <input type="button" name="delete_all" value="Alle Löschen">
             <input type="button" name="delete_select" value="Auswahl Löschen">
             <input type="submit" value="Bestellen" >

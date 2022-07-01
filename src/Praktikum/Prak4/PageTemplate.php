@@ -8,7 +8,7 @@
  *
  * PHP Version 7.4
  *
- * @file     order.php
+ * @file     PageTemplate.php
  * @package  Page Templates
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
@@ -29,12 +29,10 @@ require_once './Page.php';
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  */
-class Order extends Page
+class PageTemplate extends Page
 {
-    // to do: declare reference variables for members
+    // to do: declare reference variables for members 
     // representing substructures/blocks
-
-
 
     /**
      * Instantiates members (to be defined above).
@@ -61,28 +59,12 @@ class Order extends Page
     /**
      * Fetch all data that is necessary for later output.
      * Data is returned in an array e.g. as associative array.
-	 * @return array An array containing the requested data.
+	 * @return array An array containing the requested data. 
 	 * This may be a normal array, an empty array or an associative array.
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-        $array = [];
-        $status = [];
-        if (!$Recordset)
-            throw new Exception("Query failed: ".$_database->error);
-
-        $i = 0;
-        while ($record = $Recordset->fetch_assoc()){
-            $array[$i] = array($record['article_id'], $record['name'], $record['picture'], $record['price']);
-            $i++;
-        }
-
-        $Recordset->free();
-
-        return $array;
-
+        $query = mysql_query("select * from ordered_article", $_database);
         // to do: fetch data for this view from the database
 		// to do: return array containing data
     }
@@ -97,88 +79,9 @@ class Order extends Page
      */
     protected function generateView():void
     {
-        $title ="Bestellung";
-        $data = $this->getViewData();
-        $this->generatePageHeader($title,"",false); //to do: set optional parameters
-
+		$data = $this->getViewData();
+        $this->generatePageHeader('to do: change headline'); //to do: set optional parameters
         // to do: output view of this page
-
-        $h1 = "Bestellung";
-        $h2one = "Speisekarte";
-        $h2two = "Warenkorb";
-
-        $pizza_img = "testpizza.jpg";
-
-        $first_pizza_name = "Margherita";
-        $first_pizza_price = "4,00€";
-
-        $second_pizza_name = "Salami";
-        $second_pizza_price = "4,50€";
-
-        $third_pizza_name = "Hawaii";
-        $third_pizza_price = "5,50€";
-
-        $formecho = "https://echo.fbi.h-da.de/";
-
-        $price_sum ="14,50€";
-
-        echo <<<EOT
-            <h1>$h1</h1>
-
-            <section id="pizza_choice">
-
-            <h2>$h2one</h2>
-        EOT;
-
-        $i = 0;
-        while($i < sizeof($data)){
-
-            $pizzaname= $data[$i][1];
-            $pizzapicture = $data[$i][2];
-            $pizzaprice = $data[$i][3];
-
-            echo <<<EOT
-                <img src=$pizzapicture alt="">
-                <p>$pizzaname</p>
-                <p>$pizzaprice €</p>
-            EOT;
-            $i++;
-
-        }
-
-        echo <<<EOT
-
-          <section id="shopping_cart">
-
-
-
-            <form action=$formecho method="post" accept-charset="UTF-8" id="formular">
-
-            <fieldset>
-            <legend>$h2two</legend>
-            <p>Ausgewählte Pizzen werden bestellt. </p>
-            <select name="shopping_cart[]" size="3" tabindex="0" id="pizza_shopping_cart" multiple>
-                <option>$first_pizza_name</option>
-                <option>$second_pizza_name</option>
-                <option>$third_pizza_name</option>
-            </select>
-
-            <p>Ausgewählte Pizzen werden bestellt. </p>
-            <label for="pizza_shopping_cart">Pizzen im Warenkorb</label>
-
-
-            <p>Gesamtpreis: $price_sum</p>
-
-            <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse"></p>
-            <input type="button" name="delete_all" value="Alle Löschen">
-            <input type="button" name="delete_select" value="Auswahl Löschen">
-            <input type="submit" value="Bestellen" >
-            </fieldset>
-            </form>
-
-          </section>
-
-          EOT;
         $this->generatePageFooter();
     }
 
@@ -208,7 +111,7 @@ class Order extends Page
     public static function main():void
     {
         try {
-            $page = new Order();
+            $page = new PageTemplate();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -219,13 +122,13 @@ class Order extends Page
     }
 }
 
-// This call is starting the creation of the page.
+// This call is starting the creation of the page. 
 // That is input is processed and output is created.
-Order::main();
+PageTemplate::main();
 
 // Zend standard does not like closing php-tag!
-// PHP doesn't require the closing tag (it is assumed when the file ends).
-// Not specifying the closing ? >  helps to prevent accidents
-// like additional whitespace which will cause session
-// initialization to fail ("headers already sent").
+// PHP doesn't require the closing tag (it is assumed when the file ends). 
+// Not specifying the closing ? >  helps to prevent accidents 
+// like additional whitespace which will cause session 
+// initialization to fail ("headers already sent"). 
 //? >
