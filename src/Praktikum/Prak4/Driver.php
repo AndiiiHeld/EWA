@@ -74,7 +74,7 @@ class Driver extends Page
         $address = [];
         $pizza = [];
 
-        $SQLabfrage ="Select * from article";
+        $SQLabfrage ="Select article_id, name from article";
         $Recordset = $this->_database->query ($SQLabfrage);
 
         if (!$Recordset)
@@ -87,7 +87,7 @@ class Driver extends Page
         $Recordset->free();
 
 
-        $SQLabfrage ="Select * from ordering";
+        $SQLabfrage ="Select ordering_id, address from ordering";
         $Recordset = $this->_database->query ($SQLabfrage);
 
         if (!$Recordset)
@@ -99,7 +99,7 @@ class Driver extends Page
 
         $Recordset->free();
 
-        $SQLabfrage ="Select * from ordered_article";
+        $SQLabfrage ="Select status, ordered_article_id, ordering_id, article_id from ordered_article";
         $Recordset = $this->_database->query ($SQLabfrage);
 
         if (!$Recordset)
