@@ -66,7 +66,7 @@ class Order extends Page
      */
     protected function getViewData():array
     {
-        $SQLabfrage ="Select * from article";
+        $SQLabfrage ="Select article_id, name, picture, price from article";
         $Recordset = $this->_database->query ($SQLabfrage);
         $array = [];
         $status = [];
@@ -82,9 +82,7 @@ class Order extends Page
         $Recordset->free();
 
         return $array;
-
-        // to do: fetch data for this view from the database
-		// to do: return array containing data
+        
     }
 
     /**
