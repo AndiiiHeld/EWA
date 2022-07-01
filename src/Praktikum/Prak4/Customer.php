@@ -64,7 +64,7 @@ class Customer extends Page
 	 * @return array An array containing the requested data.
 	 * This may be a normal array, an empty array or an associative array.
      */
-    protected function getViewData():array
+        protected function getViewData():array
     {
         $array = [];
                 $status = [];
@@ -72,7 +72,7 @@ class Customer extends Page
                 $artid = [];
                 $pizza = [];
 
-                $SQLabfrage ="Select * from article";
+                $SQLabfrage ="Select article_id, name from article";
                 $Recordset = $this->_database->query ($SQLabfrage);
 
                 if (!$Recordset)
@@ -84,7 +84,7 @@ class Customer extends Page
 
                 $Recordset->free();
 
-                $SQLabfrage ="Select * from ordered_article";
+                $SQLabfrage ="Select status, ordered_article_id, article_id from ordered_article";
                 $Recordset = $this->_database->query ($SQLabfrage);
 
                 if (!$Recordset)
