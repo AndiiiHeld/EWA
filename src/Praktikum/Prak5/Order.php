@@ -105,20 +105,9 @@ class Order extends Page
         $h2one = "Speisekarte";
         $h2two = "Warenkorb";
 
-        $pizza_img = "testpizza.jpg";
-
-        $first_pizza_name = "Margherita";
-        $first_pizza_price = "4,00€";
-
-        $second_pizza_name = "Salami";
-        $second_pizza_price = "4,50€";
-
-        $third_pizza_name = "Hawaii";
-        $third_pizza_price = "5,50€";
-
         $formecho = "https://echo.fbi.h-da.de/";
 
-        $price_sum ="14,50€";
+        $price_sum = "0";
 
         echo <<<EOT
             <h1>$h1</h1>
@@ -129,8 +118,8 @@ class Order extends Page
         EOT;
 
         $i = 0;
-        while($i < sizeof($data)){
-
+        while($i < sizeof($data))
+        {
             $pizzaname= $data[$i][1];
             $pizzapicture = $data[$i][2];
             $pizzaprice = $data[$i][3];
@@ -140,15 +129,16 @@ class Order extends Page
                 <p>$pizzaname</p>
                 <p>$pizzaprice €</p>
             EOT;
+
             $i++;
 
         }
+        $shopping_cart = [];
+        $address = "";
 
-        echo <<<EOT
+        echo<<<EOT
 
-          <section id="shopping_cart">
-
-
+            <section id="shopping_cart">
 
             <form action=$formecho method="post" accept-charset="UTF-8" id="formular">
 
@@ -156,9 +146,16 @@ class Order extends Page
             <legend>$h2two</legend>
             <p>Ausgewählte Pizzen werden bestellt. </p>
             <select name="shopping_cart[]" size="3" tabindex="0" id="pizza_shopping_cart" multiple>
-                <option>$first_pizza_name</option>
-                <option>$second_pizza_name</option>
-                <option>$third_pizza_name</option>
+        EOT;
+
+        for ($i=0; $i < sizeof($data); $i++)
+        {
+            $pizzaname = $data[$i][1];
+            $pizzaprice = $data[$i][3];
+            Echo "<option data-price=$pizzaprice> <p>$pizzaname</p> </option>";
+        };
+        echo <<<EOT
+
             </select>
 
             <p>Ausgewählte Pizzen werden bestellt. </p>
@@ -167,6 +164,9 @@ class Order extends Page
 
             <p>Gesamtpreis: $price_sum</p>
 
+        EOT;
+
+        echo <<<EOT
             <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse" required></p>
             <input type="button" name="delete_all" value="Alle Löschen">
             <input type="button" name="delete_select" value="Auswahl Löschen">
@@ -176,20 +176,17 @@ class Order extends Page
 
           </section>
 
-          EOT;
+
+        EOT;
+
+
         $this->generatePageFooter();
     }
 
-    /**
-     * Processes the data that comes via GET or POST.
-     * If this page is supposed to do something with submitted
-     * data do it here.
-	 * @return void
-     */
     protected function processReceivedData():void
     {
         parent::processReceivedData();
-        // to do: call processReceivedData() for all members
+
     }
 
     /**
