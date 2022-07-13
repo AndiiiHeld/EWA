@@ -8,14 +8,14 @@
  *
  * PHP Version 7.4
  *
- * @file     baker.php
+ * @file     order.php
  * @package  Page Templates
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  * @version  3.1
  */
 
-
+// to do: change name 'PageTemplate' throughout this file
 require_once './Page.php';
 
 /**
@@ -29,9 +29,10 @@ require_once './Page.php';
  * @author   Bernhard Kreling, <bernhard.kreling@h-da.de>
  * @author   Ralf Hahn, <ralf.hahn@h-da.de>
  */
-class Baker extends Page
+class Order extends Page
 {
-
+    // to do: declare reference variables for members
+    // representing substructures/blocks
 
 
 
@@ -44,7 +45,7 @@ class Baker extends Page
     protected function __construct()
     {
         parent::__construct();
-
+        // to do: instantiate members representing substructures/blocks
     }
 
     /**
@@ -65,62 +66,23 @@ class Baker extends Page
      */
     protected function getViewData():array
     {
+        $SQLabfrage ="Select article_id, name, picture, price from article";
+        $Recordset = $this->_database->query ($SQLabfrage);
         $array = [];
         $status = [];
-        $orderid = [];
-        $artid = [];
-
-        $pizza = [];
-
-
-
-        $SQLabfrage ="Select * from article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-
-        if (!$Recordset)
-            throw new Exception("Query failed: ".$_database->error);
-
-        while($record = $Recordset->fetch_assoc()){
-            $pizza += array($record['article_id'] => $record['name']);
-        }
-
-
-         $Recordset->free();
-
-        $SQLabfrage ="Select * from ordered_article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-
         if (!$Recordset)
             throw new Exception("Query failed: ".$_database->error);
 
         $i = 0;
         while ($record = $Recordset->fetch_assoc()){
-            $status[$i] = $record['status'];
-            $orderid[$i] = $record['ordered_article_id'];
-            $artid[$i] = $record['article_id'];
-
-            $array[$i] = array($orderid[$i], $pizza[$artid[$i]] , $status[$i]);
-
+            $array[$i] = array($record['article_id'], $record['name'], $record['picture'], $record['price']);
             $i++;
-        }
-
-        $i = 0;
-        while ($i < sizeof($array)){
-        //echo "<p>" .$array[$i][0] ." und " . $array[$i][1] . " und " . $array[$i][2]. "</p>";
-        $i++;
         }
 
         $Recordset->free();
 
-        $SQLabfrage ="Select * from ordered_article";
-        $Recordset = $this->_database->query ($SQLabfrage);
-
-
-
         return $array;
-
-        // to do: fetch data for this view from the database
-		// to do: return array containing data
+        
     }
 
     /**
@@ -133,84 +95,88 @@ class Baker extends Page
      */
     protected function generateView():void
     {
-        $title ="Backstatus";
+        $title ="Bestellung";
         $data = $this->getViewData();
-
-        $url = $_SERVER['PHP_SELF'];
-        header("Refresh: 10; URL=$url");
-
         $this->generatePageHeader($title,"",false); //to do: set optional parameters
 
         // to do: output view of this page
 
-        $h1 = "Bäckerseite";
+        $h1 = "Bestellung";
+        $h2one = "Speisekarte";
+        $h2two = "Warenkorb";
 
-        $btxt = "Bestellt";
-        $otxt = "Im Ofen";
-        $ftxt = "Fertig";
+        $pizza_img = "testpizza.jpg";
 
-        $b = "ordered";
-        $o = "in_oven";
-        $f = "done";
+        $first_pizza_name = "Margherita";
+        $first_pizza_price = "4,00€";
 
+        $second_pizza_name = "Salami";
+        $second_pizza_price = "4,50€";
 
-        echo "<h1>$h1</h1>";
+        $third_pizza_name = "Hawaii";
+        $third_pizza_price = "5,50€";
+
+        $formecho = "https://echo.fbi.h-da.de/";
+
+        $price_sum ="14,50€";
+
+        echo <<<EOT
+            <h1>$h1</h1>
+
+            <section id="pizza_choice">
+
+            <h2>$h2one</h2>
+        EOT;
 
         $i = 0;
-        while ($i < sizeof($data)){
-            $orderid = $data[$i][0];
-            $pizzaname = $data[$i][1];
+        while($i < sizeof($data)){
 
-            $bid = $b . $orderid;
-            $oid = $o . $orderid;
-            $fid = $f . $orderid;
+            $pizzaname= $data[$i][1];
+            $pizzapicture = $data[$i][2];
+            $pizzaprice = $data[$i][3];
 
-            if($data[$i][2] == '1'){
-                $r1 = "checked";
-            }else{
-                $r1 = "";
-            }
-
-            if($data[$i][2] == '2'){
-                $r2 = "checked";
-            }else{
-                $r2 = "";
-            }
-
-            if($data[$i][2] == '3'){
-                $r3 = "checked";
-            }else{
-                $r3 = "";
-            }
-
-
-
-            $pizzaid = "pizza".$orderid;
-
-             echo <<<EOT
-
-                 <section id=$pizzaid >
-
-                 <h2>Bestellung $orderid Pizza $pizzaname</h2>
-                 <p>
-                     <input type="radio" id=$bid name=$pizzaid value="1" $r1>
-                           <label for=$bid>$btxt</label>
-                     </p>
-                     <p>
-                        <input type="radio" id=$oid name=$pizzaid value="2" $r2>
-                        <label for=$oid>$otxt</label>
-                     </p>
-                     <p>
-                        <input type="radio" id=$fid name=$pizzaid value="3" $r3>
-                        <label for=$fid>$ftxt</label>
-                     </p>
-
-                 </section>
-
+            echo <<<EOT
+                <img src=$pizzapicture alt="">
+                <p>$pizzaname</p>
+                <p>$pizzaprice €</p>
             EOT;
-
             $i++;
+
         }
+
+        echo <<<EOT
+
+          <section id="shopping_cart">
+
+
+
+            <form action=$formecho method="post" accept-charset="UTF-8" id="formular">
+
+            <fieldset>
+            <legend>$h2two</legend>
+            <p>Ausgewählte Pizzen werden bestellt. </p>
+            <select name="shopping_cart[]" size="3" tabindex="0" id="pizza_shopping_cart" multiple>
+                <option>$first_pizza_name</option>
+                <option>$second_pizza_name</option>
+                <option>$third_pizza_name</option>
+            </select>
+
+            <p>Ausgewählte Pizzen werden bestellt. </p>
+            <label for="pizza_shopping_cart">Pizzen im Warenkorb</label>
+
+
+            <p>Gesamtpreis: $price_sum</p>
+
+            <p><input type="text" id="address" name="address" value="" placeholder="Ihre Adresse" required></p>
+            <input type="button" name="delete_all" value="Alle Löschen">
+            <input type="button" name="delete_select" value="Auswahl Löschen">
+            <input type="submit" value="Bestellen" >
+            </fieldset>
+            </form>
+
+          </section>
+
+          EOT;
         $this->generatePageFooter();
     }
 
@@ -240,7 +206,7 @@ class Baker extends Page
     public static function main():void
     {
         try {
-            $page = new Baker();
+            $page = new Order();
             $page->processReceivedData();
             $page->generateView();
         } catch (Exception $e) {
@@ -253,7 +219,7 @@ class Baker extends Page
 
 // This call is starting the creation of the page.
 // That is input is processed and output is created.
-Baker::main();
+Order::main();
 
 // Zend standard does not like closing php-tag!
 // PHP doesn't require the closing tag (it is assumed when the file ends).
